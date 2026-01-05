@@ -34,3 +34,9 @@ figure_pattern = re.compile(
 ```
 - Do not use implicit string literal concatenation ("a" "b"), especially when expressions are involved.
 Prefer incremental construction with += for textwrap.dedent multi-part strings.
+- When writing allure-pytest
+  - do not use with allure.step().
+  - Refactor all such usages to the @allure.step() decorator.
+  - If the step description or parameter is too long,
+    store it in a private variable: self._<name>.
+  - Reference the private variable in the @allure.step() decorator.
