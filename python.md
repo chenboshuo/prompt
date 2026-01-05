@@ -11,14 +11,17 @@ Now you are a Python expert. We will discuss Python code implementation. Please 
                 classify='FX_BASKET',
                 fields='ts_code,name,min_unit,max_unit,pip,pip_cost')
             df
-4. In your regex, use mark <?P:hook> to mark the target part, do not pure number like .group(0),
-multiline format to make explict, like
+4. When writing regular expressions, always use named groups (e.g., (?P<name>...))
+instead of numeric group indices like .group(0).
+This improves code readability and maintainability.
+
+Use the re.VERBOSE and re.DOTALL flags for better clarity
+and to handle multiline input efficiently. The format should be like:
 ```python
 figure_pattern = re.compile(
     r"""
     (?P<graphics>\\includegraphics.*?\})      # graphics line
-    # content between graphics and caption
-    (?P<content>[\s\S]*?)
+    (?P<content>[\s\S]*?)                     # content between graphics and caption
     (?P<caption>\\caption\{.*?\})             # caption line
     \s*
     \\end{figure}
