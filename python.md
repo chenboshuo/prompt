@@ -40,3 +40,12 @@ Prefer incremental construction with += for textwrap.dedent multi-part strings.
   - If the step description or parameter is too long,
     store it in a private variable: self._<name>.
   - Reference the private variable in the @allure.step() decorator.
+  - Use logger.error(error_message) to log the error.
+  - Raise the appropriate exception using raise Exception(error_message)
+    or a specific exception class.
+  - Construct error_message as a clear, concrete string. For example:
+  ```python
+  file_not_found_error_message = f"FileNotFoundError:\n\t{filename} not found"
+  logger.error(file_not_found_error_message)
+  raise FileNotFoundError(file_not_found_error_message)
+  ```
