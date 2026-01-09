@@ -16,22 +16,38 @@ Now you are a Python expert. We will discuss Python code implementation. Please 
 instead of numeric group indices like .group(0).
 This improves code readability and maintainability.
 
-Use the re.VERBOSE and re.DOTALL flags for better clarity
-and to handle multiline input efficiently. The format should be like:
-```python
-figure_pattern = re.compile(
-    r"""
-    (?P<graphics>\\includegraphics.*?\})      # graphics line
-    (?P<content>[\s\S]*?)                     # content between graphics and caption
-    (?P<caption>\\caption\{.*?\})             # caption line
-    \s*
-    \\end{figure}
-    \s*
-    (?P<source_line>\\textbf\s*{\s*\\emph\s*{\s*(?P<source_text>[^}]*)\s*}\s*})?   # source mark
-    """,
-    re.VERBOSE | re.DOTALL
-)
-```
+  - Use the re.VERBOSE and re.DOTALL flags for better clarity
+  - and to handle multiline input efficiently. The format should be like:
+    ```python
+    figure_pattern = re.compile(
+        r"""
+        (?P<graphics>\\includegraphics.*?\})      # graphics line
+        (?P<content>[\s\S]*?)                     # content between graphics and caption
+        (?P<caption>\\caption\{.*?\})             # caption line
+        \s*
+        \\end{figure}
+        \s*
+        (?P<source_line>\\textbf\s*{\s*\\emph\s*{\s*(?P<source_text>[^}]*)\s*}\s*})?   # source mark
+        """,
+        re.VERBOSE | re.DOTALL
+    )
+    ```
+  - When using re.sub inside a class, the replacement function must:
+    - Be stored as an instance method on self
+    - Be treated as private, with a leading underscore
+    - End with the suffix _replacer
+    - Include a concise name that summarizes the replacement target(do not use generic names like _replace)
+    for example
+    ```python
+    class FigureCleaner:
+    def _figure_caption_replacer(self, match: re.Match) -> str:
+        caption = match.group("caption")
+        return caption.upper()
+
+    def clean(self, text: str) -> str:
+        return re.sub(figure_pattern, self._figure_caption_replacer, text)
+    ```
+
 - Do not use implicit string literal concatenation ("a" "b"), especially when expressions are involved.
 Prefer incremental construction with += for textwrap.dedent multi-part strings.
 - When writing allure-pytest
